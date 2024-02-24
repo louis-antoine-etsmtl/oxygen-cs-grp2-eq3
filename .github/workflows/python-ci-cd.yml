@@ -2,6 +2,9 @@ name: Python CI/CD with Docker
 
 on:
   push:
+    paths:
+      - '*'
+      - '**/*'  # Trigger on changes in all subdirectories only if there is a change
     branches:
       - ci_cd_pipeline_docker
       - main
@@ -49,6 +52,7 @@ jobs:
 
   push:
     runs-on: ubuntu-latest
+
     needs: test
 
     steps:
