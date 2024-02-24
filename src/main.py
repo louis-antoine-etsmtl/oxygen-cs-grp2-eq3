@@ -3,19 +3,66 @@ import logging
 import requests
 import json
 import time
+import os
 
+from dotenv import load_dotenv
 
 class Main:
     def __init__(self):
-        """Setup environment variables and default values."""
-        self._hub_connection = None
-        self.HOST = None  # Setup your host here
-        self.TOKEN = None  # Setup your token here
 
-        self.TICKETS = 1  # Setup your tickets here
-        self.T_MAX = None  # Setup your max temperature here
-        self.T_MIN = None  # Setup your min temperature here
-        self.DATABASE = None  # Setup your database here
+        # Load environment variables from .env file
+        load_dotenv()
+
+        self.DATABASE = os.getenv('DATABASE_URL')
+        # Check if the environment variable is set
+        if self.DATABASE is not None:
+            print(f'Database URL: {self.DATABASE}')
+        else:
+            print('DATABASE_URL is not set. Please set the environment variable.')
+
+        self.HOST = os.getenv('HOST')
+        # Check if the environment variable is set
+        if self.HOST is not None:
+            print(f'HOST URL: {self.HOST}')
+        else:
+            print('HOST is not set. Please set the environment variable.')
+
+        self._hub_connection = os.getenv('HUB_CONNECTION')
+        # Check if the environment variable is set
+        if self._hub_connection is not None:
+            print(f'_hub_connection: {self._hub_connection}')
+        else:
+            print('_hub_connection is not set. Please set the environment variable.')
+
+        self.TOKEN = os.getenv('TOKEN')
+        # Check if the environment variable is set
+        if self.TOKEN is not None:
+            print(f'TOKEN: {self.TOKEN}')
+        else:
+            print('TOKEN is not set. Please set the environment variable.')
+
+        self.TICKETS = os.getenv('TICKETS')
+        # Check if the environment variable is set
+        if self.TICKETS is not None:
+            print(f'TICKETS: {self.TICKETS}')
+        else:
+            print('TICKETS is not set. Please set the environment variable.')
+
+        self.T_MAX = os.getenv('T_MAX')
+        # Check if the environment variable is set
+        if self.T_MAX is not None:
+            print(f'T_MAX: {self.T_MAX}')
+        else:
+            print('T_MAX is not set. Please set the environment variable.')
+
+        self.T_MIN = os.getenv('T_MIN')
+        # Check if the environment variable is set
+        if self.T_MIN is not None:
+            print(f'T_MIN: {self.T_MIN}')
+        else:
+            print('T_MIN is not set. Please set the environment variable.')
+
+
 
     def __del__(self):
         if self._hub_connection != None:
