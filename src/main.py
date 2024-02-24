@@ -4,10 +4,12 @@ import requests
 import json
 import time
 import os
-
 from dotenv import load_dotenv
 
-class Main:
+
+
+
+class App:
     def __init__(self):
 
         # Load environment variables from .env file
@@ -41,10 +43,10 @@ class Main:
         else:
             print('TOKEN is not set. Please set the environment variable.')
 
-        self.TICKETS = os.getenv('TICKETS')
+        self.TICKS = os.getenv('TICKETS')
         # Check if the environment variable is set
-        if self.TICKETS is not None:
-            print(f'TICKETS: {self.TICKETS}')
+        if self.TICKS is not None:
+            print(f'TICKETS: {self.TICKS}')
         else:
             print('TICKETS is not set. Please set the environment variable.')
 
@@ -64,24 +66,20 @@ class Main:
 
 
 
+
     def __del__(self):
         if self._hub_connection != None:
             self._hub_connection.stop()
 
-    def setup(self):
-        """Setup Oxygen CS."""
-        self.set_sensorhub()
-
     def start(self):
         """Start Oxygen CS."""
-        self.setup()
+        self.setup_sensor_hub()
         self._hub_connection.start()
-
-        print("Press CTRL+C to exit.", flush=True)
+        print("Press CTRL+C to exit.")
         while True:
             time.sleep(2)
 
-    def set_sensorhub(self):
+    def setup_sensor_hub(self):
         """Configure hub connection and subscribe to sensor data events."""
         self._hub_connection = (
             HubConnectionBuilder()
@@ -97,23 +95,23 @@ class Main:
             )
             .build()
         )
-
         self._hub_connection.on("ReceiveSensorData", self.on_sensor_data_received)
-        self._hub_connection.on_open(lambda: print("||| Connection opened.", flush=True))
-        self._hub_connection.on_close(lambda: print("||| Connection closed.", flush=True))
+        self._hub_connection.on_open(lambda: print("||| Connection opened."))
+        self._hub_connection.on_close(lambda: print("||| Connection closed."))
         self._hub_connection.on_error(
-            lambda data: print(f"||| An exception was thrown closed: {data.error}", flush=True)
+            lambda data: print(f"||| An exception was thrown closed: {data.error}")
         )
 
     def on_sensor_data_received(self, data):
         """Callback method to handle sensor data on reception."""
         try:
             print(data[0]["date"] + " --> " + data[0]["data"], flush=True)
-            date = data[0]["date"]
+            timestamp = data[0]["date"]
             temperature = float(data[0]["data"])
             self.take_action(temperature)
+            self.save_event_to_database(timestamp, temperature)
         except Exception as err:
-            print(err, flush=True)
+            print(err)
 
     def take_action(self, temperature):
         """Take action to HVAC depending on current temperature."""
@@ -124,11 +122,11 @@ class Main:
 
     def send_action_to_hvac(self, action):
         """Send action query to the HVAC service."""
-        r = requests.get(f"{self.HOST}/api/hvac/{self.TOKEN}/{action}/{self.TICKETS}")
+        r = requests.get(f"{self.HOST}/api/hvac/{self.TOKEN}/{action}/{self.TICKS}")
         details = json.loads(r.text)
         print(details, flush=True)
 
-    def send_event_to_database(self, timestamp, event):
+    def save_event_to_database(self, timestamp, temperature):
         """Save sensor data into database."""
         try:
             # To implement
@@ -137,7 +135,9 @@ class Main:
             # To implement
             pass
 
+def add_numbers(a, b):
+    return a + b
 
 if __name__ == "__main__":
-    main = Main()
-    main.start()
+    app = App()
+    app.start()
