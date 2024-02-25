@@ -11,60 +11,23 @@ import logging
 
 class App:
     def __init__(self):
-        
+        load_dotenv()  # Load environment variables from .env file
 
-        # Load environment variables from .env file
-        load_dotenv()
-
+        # Mandatory environment variables. These will raise an exception if not set
         self.DATABASE = os.getenv('DATABASE_URL')
-        # Check if the environment variable is set
-        if self.DATABASE is not None:
-            print(f'Database URL: {self.DATABASE}')
-        else:
-            print('DATABASE_URL is not set. Please set the environment variable.')
-
         self.HOST = os.getenv('HOST')
-        # Check if the environment variable is set
-        if self.HOST is not None:
-            print(f'HOST URL: {self.HOST}')
-        else:
-            print('HOST is not set. Please set the environment variable.')
-
-        self._hub_connection = os.getenv('HUB_CONNECTION')
-        # Check if the environment variable is set
-        if self._hub_connection is not None:
-            print(f'_hub_connection: {self._hub_connection}')
-        else:
-            print('_hub_connection is not set. Please set the environment variable.')
-
         self.TOKEN = os.getenv('TOKEN')
-        # Check if the environment variable is set
-        if self.TOKEN is not None:
-            print(f'TOKEN: {self.TOKEN}')
-        else:
-            print('TOKEN is not set. Please set the environment variable.')
+        self.T_MAX = int(os.getenv('T_MAX'))
+        self.T_MIN = int(os.getenv('T_MIN'))
+        self.TICKETS = int(os.getenv('TICKETS'))
 
-        self.TICKS = os.getenv('TICKETS')
-        # Check if the environment variable is set
-        if self.TICKS is not None:
-            print(f'TICKETS: {self.TICKS}')
-        else:
-            print('TICKETS is not set. Please set the environment variable.')
-
-        self.T_MAX = os.getenv('T_MAX')
-        # Check if the environment variable is set
-        if self.T_MAX is not None:
-            print(f'T_MAX: {self.T_MAX}')
-        else:
-            print('T_MAX is not set. Please set the environment variable.')
-
-        self.T_MIN = os.getenv('T_MIN')
-        # Check if the environment variable is set
-        if self.T_MIN is not None:
-            print(f'T_MIN: {self.T_MIN}')
-        else:
-            print('T_MIN is not set. Please set the environment variable.')
-
+        # Ensure all mandatory environment variables are set
+        mandatory_vars = ['DATABASE', 'HOST', 'TOKEN', 'T_MAX', 'T_MIN', 'TICKETS']
+        for var in mandatory_vars:
+            if getattr(self, var) is None:
+                raise ValueError(f'{var} is not set. Please set the environment variable.')
+        
+        self._hub_connection = None
 
 
 
@@ -160,7 +123,7 @@ class App:
     def send_action_to_hvac(self, action):
         """Envoyer une action au service HVAC et enregistrer l'événement."""
         try:
-            response = requests.get(f"{self.HOST}/api/hvac/{self.TOKEN}/{action}/{self.TICKS}")
+            response = requests.get(f"{self.HOST}/api/hvac/{self.TOKEN}/{action}/{self.TICKETS}")
             if response.status_code == 200:
                 details = response.json()
                 print(f"Action {action} sent to HVAC, response: {details}")
@@ -184,8 +147,7 @@ class App:
                     print(f"HVAC event {event_type} saved to database: {timestamp}")
         except Exception as e:
             print(f"Error saving HVAC event {event_type} to database: {e}")
-    def add_numbers(a, b):
-        return a + b
+
 
 if __name__ == "__main__":
     app = App()
