@@ -1,21 +1,72 @@
-from signalrcore.hub_connection_builder import HubConnectionBuilder
-import logging
+import psycopg2
+import os
 import requests
 import json
 import time
+from dotenv import load_dotenv
+from signalrcore.hub_connection_builder import HubConnectionBuilder
+import logging
+
 
 
 class App:
     def __init__(self):
-        self._hub_connection = None
-        self.TICKS = 10
+        
 
-        # To be configured by your team
-        self.HOST = None  # Setup your host here
-        self.TOKEN = None  # Setup your token here
-        self.T_MAX = None  # Setup your max temperature here
-        self.T_MIN = None  # Setup your min temperature here
-        self.DATABASE_URL = None  # Setup your database here
+        # Load environment variables from .env file
+        load_dotenv()
+
+        self.DATABASE = os.getenv('DATABASE_URL')
+        # Check if the environment variable is set
+        if self.DATABASE is not None:
+            print(f'Database URL: {self.DATABASE}')
+        else:
+            print('DATABASE_URL is not set. Please set the environment variable.')
+
+        self.HOST = os.getenv('HOST')
+        # Check if the environment variable is set
+        if self.HOST is not None:
+            print(f'HOST URL: {self.HOST}')
+        else:
+            print('HOST is not set. Please set the environment variable.')
+
+        self._hub_connection = os.getenv('HUB_CONNECTION')
+        # Check if the environment variable is set
+        if self._hub_connection is not None:
+            print(f'_hub_connection: {self._hub_connection}')
+        else:
+            print('_hub_connection is not set. Please set the environment variable.')
+
+        self.TOKEN = os.getenv('TOKEN')
+        # Check if the environment variable is set
+        if self.TOKEN is not None:
+            print(f'TOKEN: {self.TOKEN}')
+        else:
+            print('TOKEN is not set. Please set the environment variable.')
+
+        self.TICKS = os.getenv('TICKETS')
+        # Check if the environment variable is set
+        if self.TICKS is not None:
+            print(f'TICKETS: {self.TICKS}')
+        else:
+            print('TICKETS is not set. Please set the environment variable.')
+
+        self.T_MAX = os.getenv('T_MAX')
+        # Check if the environment variable is set
+        if self.T_MAX is not None:
+            print(f'T_MAX: {self.T_MAX}')
+        else:
+            print('T_MAX is not set. Please set the environment variable.')
+
+        self.T_MIN = os.getenv('T_MIN')
+        # Check if the environment variable is set
+        if self.T_MIN is not None:
+            print(f'T_MIN: {self.T_MIN}')
+        else:
+            print('T_MIN is not set. Please set the environment variable.')
+
+
+
 
     def __del__(self):
         if self._hub_connection != None:
@@ -70,21 +121,71 @@ class App:
         elif float(temperature) <= float(self.T_MIN):
             self.send_action_to_hvac("TurnOnHeater")
 
-    def send_action_to_hvac(self, action):
-        """Send action query to the HVAC service."""
-        r = requests.get(f"{self.HOST}/api/hvac/{self.TOKEN}/{action}/{self.TICKS}")
-        details = json.loads(r.text)
-        print(details, flush=True)
+
+
 
     def save_event_to_database(self, timestamp, temperature):
-        """Save sensor data into database."""
+        """Enregistrer les données de capteur dans la base de données."""
+        connection = None
         try:
-            # To implement
-            pass
-        except requests.exceptions.RequestException as e:
-            # To implement
-            pass
+            connection = psycopg2.connect(self.DATABASE)
+            cursor = connection.cursor()
 
+            # Insertion des données de température
+            insert_sensor_data_query = """
+            INSERT INTO SENSOR_DATA (timestamp, temperature) VALUES (%s, %s);
+            """
+            cursor.execute(insert_sensor_data_query, (timestamp, temperature))
+            connection.commit()
+            print(f"Sensor data saved to database: {timestamp}, {temperature}")
+
+        except (Exception, psycopg2.DatabaseError) as error:
+            print(f"Erreur lors de l'enregistrement dans la base de données: {error}")
+        finally:
+            if connection:
+                cursor.close()
+                connection.close()
+
+
+
+    def take_action(self, temperature):
+        """Take action to HVAC depending on current temperature."""
+        if float(temperature) >= float(self.T_MAX):
+            print(f"Temperature {temperature} >= {self.T_MAX}: Turning on AC.")
+            self.send_action_to_hvac("TurnOnAc")
+        elif float(temperature) <= float(self.T_MIN):
+            print(f"Temperature {temperature} <= {self.T_MIN}: Turning on Heater.")
+            self.send_action_to_hvac("TurnOnHeater")
+
+    def send_action_to_hvac(self, action):
+        """Envoyer une action au service HVAC et enregistrer l'événement."""
+        try:
+            response = requests.get(f"{self.HOST}/api/hvac/{self.TOKEN}/{action}/{self.TICKS}")
+            if response.status_code == 200:
+                details = response.json()
+                print(f"Action {action} sent to HVAC, response: {details}")
+                # Enregistrez l'événement HVAC après avoir envoyé l'action
+                timestamp = time.strftime('%Y-%m-%d %H:%M:%S')
+                self.save_hvac_event_to_database(timestamp, action)
+            else:
+                print(f"Failed to send action {action} to HVAC: {response.status_code}")
+        except Exception as e:
+            print(f"Exception while sending action {action} to HVAC: {e}")
+
+    def save_hvac_event_to_database(self, timestamp, event_type):
+        """Enregistrer les événements HVAC dans la base de données."""
+        try:
+            with psycopg2.connect(self.DATABASE) as conn:
+                with conn.cursor() as cursor:
+                    insert_query = """
+                    INSERT INTO HVAC_EVENTS (timestamp, event_type) VALUES (%s, %s);
+                    """
+                    cursor.execute(insert_query, (timestamp, event_type))
+                    print(f"HVAC event {event_type} saved to database: {timestamp}")
+        except Exception as e:
+            print(f"Error saving HVAC event {event_type} to database: {e}")
+    def add_numbers(a, b):
+        return a + b
 
 if __name__ == "__main__":
     app = App()
