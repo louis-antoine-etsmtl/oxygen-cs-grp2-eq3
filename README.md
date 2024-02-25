@@ -40,7 +40,7 @@ pipenv run start
 
 
 ```bash
-pipenv run python -m test.test
+pipenv run test
 ```
 ## Logging
 
