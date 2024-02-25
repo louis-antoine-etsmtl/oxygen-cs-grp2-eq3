@@ -40,7 +40,8 @@ pipenv run start
 
 
 ```bash
-pipenv run python -m test.test```
+pipenv run python -m test.test
+```
 ## Logging
 
 The application logs important events such as connection open/close and error events to help in troubleshooting.
