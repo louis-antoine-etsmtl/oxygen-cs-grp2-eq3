@@ -8,7 +8,7 @@ This application uses `pipenv`, a tool that aims to bring the best of all packag
 
 ## Requierements
 
-- Python 3.8+
+- Python 3.8
 - pipenv
 
 ## Getting Started
@@ -36,8 +36,8 @@ After setup, you can start the program with the following command:
 ```bash
 pipenv run start
 ```
-## Running the test
 
+## Running the test
 
 ```bash
 pipenv run test
