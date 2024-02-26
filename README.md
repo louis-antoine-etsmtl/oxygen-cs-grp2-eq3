@@ -37,6 +37,11 @@ After setup, you can start the program with the following command:
 pipenv run start
 ```
 
+## Running the test
+
+```bash
+pipenv run test
+```
 ## Logging
 
 The application logs important events such as connection open/close and error events to help in troubleshooting.
