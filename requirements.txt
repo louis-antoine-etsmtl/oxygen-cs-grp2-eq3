@@ -1,5 +1,4 @@
 python-dotenv
-unittest
 pipenv
 signalrcore
 psycopg2
