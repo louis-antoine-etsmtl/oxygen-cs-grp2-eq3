@@ -7,10 +7,11 @@ from io import StringIO
 
 from src.main import App
 
+
 class TestApp(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        load_dotenv()  
+        load_dotenv()
 
         cls.TICKETS = int(os.getenv("TICKETS"))
         cls.T_MAX = int(os.getenv("T_MAX"))
@@ -24,10 +25,12 @@ class TestApp(unittest.TestCase):
         self.assertEqual(self.app.T_MAX, self.T_MAX)
         self.assertEqual(self.app.T_MIN, self.T_MIN)
 
-    @patch('requests.get')  # Simulez 'requests.get' pour la durée de ce test
+    @patch("requests.get")  # Simulez 'requests.get' pour la durée de ce test
     def test_send_action_to_hvac(self, mock_get):
         mock_get.return_value.status_code = 200
-        mock_get.return_value.json.return_value = {"Response": "Activating AC for 2 TICKETS"}
+        mock_get.return_value.json.return_value = {
+            "Response": "Activating AC for 2 TICKETS"
+        }
         self.app.send_action_to_hvac("TurnOnAc")
         mock_get.assert_called_once()
 
@@ -58,6 +61,7 @@ class TestApp(unittest.TestCase):
         # Restaurez la sortie standard
         sys.stdout = original_stdout
         return output
+
 
 if __name__ == "__main__":
     unittest.main()
