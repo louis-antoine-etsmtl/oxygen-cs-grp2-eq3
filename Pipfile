@@ -18,4 +18,3 @@ python_version = "3.8"
 start = "python src/main.py"
 test = "# To implement"
 lint = "# To implement"
-

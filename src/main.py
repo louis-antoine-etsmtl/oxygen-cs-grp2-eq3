@@ -3,7 +3,6 @@ import os
 import requests
 import json
 import time
-
 from dotenv import load_dotenv
 from signalrcore.hub_connection_builder import HubConnectionBuilder
 import logging
@@ -29,6 +28,8 @@ class App:
                 raise ValueError(f'{var} is not set. Please set the environment variable.')
         
         self._hub_connection = None
+
+
 
     def __del__(self):
         if self._hub_connection != None:
@@ -83,23 +84,12 @@ class App:
         elif float(temperature) <= float(self.T_MIN):
             self.send_action_to_hvac("TurnOnHeater")
 
-<<<<<<< HEAD
-    def send_action_to_hvac(self, action):
-        """Send action query to the HVAC service."""
-        r = requests.get(f"{self.HOST}/api/hvac/{self.TOKEN}/{action}/{self.TICKS}")
-        details = json.loads(r.text)
-        print(details, flush=True)
-
-    def save_event_to_database(self, timestamp, temperature):
-        """Save sensor data into database."""
-=======
 
 
 
     def save_event_to_database(self, timestamp, temperature):
         """Enregistrer les données de capteur dans la base de données."""
         connection = None
->>>>>>> main
         try:
             connection = psycopg2.connect(self.DATABASE)
             cursor = connection.cursor()
@@ -158,13 +148,7 @@ class App:
         except Exception as e:
             print(f"Error saving HVAC event {event_type} to database: {e}")
 
-def add_numbers(a, b):
-    return a + b
 
 if __name__ == "__main__":
     app = App()
-<<<<<<< HEAD
     app.start()
-=======
-    app.start()
->>>>>>> main

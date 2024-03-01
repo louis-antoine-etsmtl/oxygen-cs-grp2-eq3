@@ -1,2 +1,4 @@
 python-dotenv
-pytest
+pipenv
+signalrcore
+psycopg2
