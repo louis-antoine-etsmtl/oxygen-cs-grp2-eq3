@@ -1,0 +1,9 @@
+[MASTER]
+disable=
+    C0114, # missing-module-docstring
+    C0115, # missing-class-docstring
+    C0116, # missing-function-docstring
+    C0103, # Attribute name X doesn't conform to snake_case naming style (invalid-name)
+    E1120, # No value for argument 'ctx' in function call (no-value-for-parameter)
+    W0718, # Catching too general exception Exception (broad-exception-caught)
+    E0611 # No name 'load_dotenv' in module 'dotenv' (no-name-in-module)
