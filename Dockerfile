@@ -1,5 +1,5 @@
 # Use a lightweight base image with Python
-FROM python:3.8-slim
+FROM python:alpine
 
 # Set environment variables
 ENV PYTHONDONTWRITEBYTECODE 1
@@ -10,7 +10,7 @@ WORKDIR /usr/src/app
 
 
 RUN apt-get update \
-    && apt-get -y install libpq-dev gcc \
+    && apt-get -y install -y --no-install-recommends libpq-dev gcc \
     && pip install psycopg2
 
 # Install dependencies
