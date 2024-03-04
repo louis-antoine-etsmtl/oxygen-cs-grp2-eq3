@@ -1,5 +1,5 @@
 # Use a lightweight base image with Python
-FROM base_image:alpine
+FROM python:3.8-alpine
 
 # Set environment variables
 ENV PYTHONDONTWRITEBYTECODE 1
