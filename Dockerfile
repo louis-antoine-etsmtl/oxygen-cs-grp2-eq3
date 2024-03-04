@@ -10,7 +10,7 @@ WORKDIR /usr/src/app
 
 
 RUN apt-get update \
-    && apt-get -y install -y --no-install-recommends libpq-dev gcc \
+    && apt-get -y install -y libpq-dev gcc \
     && pip install psycopg2
 
 # Install dependencies
