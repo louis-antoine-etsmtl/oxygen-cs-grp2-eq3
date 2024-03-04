@@ -9,9 +9,9 @@ ENV PYTHONUNBUFFERED 1
 WORKDIR /usr/src/app
 
 
-RUN apt-get update \
-    && apt-get -y install -y libpq-dev gcc \
-    && pip install psycopg2
+# install psycopg2 dependencies
+RUN apk update
+RUN apk add postgresql-dev gcc python3-dev musl-dev
 
 # Install dependencies
 COPY requirements.txt ./
