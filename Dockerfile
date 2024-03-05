@@ -1,26 +1,14 @@
-# Use a lightweight base image with Python
-FROM python:3.8-slim
+# Stage 1: Build
+FROM python:3.8 as build
 
-# Set environment variables
-ENV PYTHONDONTWRITEBYTECODE 1
-ENV PYTHONUNBUFFERED 1
-
-# Create and set the working directory
 WORKDIR /usr/src/app
-
-
-# Install dependencies
-COPY requirements.txt ./
+COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy the application code into the container
-COPY . .
+# Stage 2: Runtime
+FROM python:3.8-slim as runtime
 
-# Clean up unnecessary files and reduce the image size
-RUN apt-get remove -y --purge build-essential && \
-    apt-get autoremove -y && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/* /root/.cache /tmp/*
+WORKDIR /usr/src/app
+COPY --from=build /usr/src/app /usr/src/app
 
-# Specify the command to run on container start
 CMD ["python", "./src/main.py"]
