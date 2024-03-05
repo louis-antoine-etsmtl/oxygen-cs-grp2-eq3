@@ -1,24 +1,20 @@
-# Use a lightweight base image with Python
-FROM python:3.8-alpine
+FROM alpine AS compile-image
 
-# Set environment variables
-ENV PYTHONDONTWRITEBYTECODE 1
-ENV PYTHONUNBUFFERED 1
+RUN apk add --no-cache python3 py-pip openssl ca-certificates python3-dev build-base wget
 
-# Create and set the working directory
 WORKDIR /usr/src/app
 
-
-# Install dependencies
 COPY requirements.txt ./
-RUN apk --no-cache add \
-    build-base \
-    libffi-dev \
-    && pip install --no-cache-dir -r requirements.txt \
-    && apk del build-base libffi-dev
+RUN python3 -m venv /usr/src/app
+RUN /usr/src/app/bin/pip install -r requirements.txt
 
-# Copy the application code into the container
-COPY . .
+FROM alpine AS runtime-image
 
-# Specify the command to run on container start
+RUN apk add --no-cache python3 openssl ca-certificates
+
+WORKDIR /usr/src/app
+COPY . /usr/src/app
+
+COPY --from=compile-image /usr/src/app/ ./
+
 CMD ["python", "./src/main.py"]
