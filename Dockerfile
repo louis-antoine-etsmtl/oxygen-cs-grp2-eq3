@@ -1,5 +1,5 @@
 # Use a lightweight base image with Python
-FROM python:alpine
+FROM python:3.8-alpine
 
 # Set environment variables
 ENV PYTHONDONTWRITEBYTECODE 1
@@ -8,10 +8,6 @@ ENV PYTHONUNBUFFERED 1
 # Create and set the working directory
 WORKDIR /usr/src/app
 
-
-# install psycopg2 dependencies
-RUN apk update
-RUN apk add postgresql-dev gcc python3-dev musl-dev
 
 # Install dependencies
 COPY requirements.txt ./
