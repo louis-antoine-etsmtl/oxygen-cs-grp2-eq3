@@ -21,9 +21,9 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY . .
 
 # Clean up unnecessary files and reduce the image size
-RUN apt-get remove -y --purge build-essential && \
-    apt-get autoremove -y && \
-    apt-get clean && \
+RUN apk remove -y --purge build-essential && \
+    apk autoremove -y && \
+    apk clean && \
     rm -rf /var/lib/apt/lists/* /root/.cache /tmp/*
 
 # Specify the command to run on container start
