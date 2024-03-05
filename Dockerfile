@@ -24,8 +24,5 @@ RUN apk --no-cache add \
 # Copy the application code into the container
 COPY . .
 
-# Clean up unnecessary files and reduce the image size
-RUN apk rm -rf /var/cache/apk/*
-
 # Specify the command to run on container start
 CMD ["python", "./src/main.py"]
