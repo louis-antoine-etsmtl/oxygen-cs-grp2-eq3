@@ -25,8 +25,7 @@ RUN apk --no-cache add \
 COPY . .
 
 # Clean up unnecessary files and reduce the image size
-RUN apk del .build-deps && \
-    rm -rf /var/cache/apk/*
+RUN apk rm -rf /var/cache/apk/*
 
 # Specify the command to run on container start
 CMD ["python", "./src/main.py"]
