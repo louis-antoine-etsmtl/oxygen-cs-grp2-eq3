@@ -15,16 +15,18 @@ RUN apk add postgresql-dev gcc python3-dev musl-dev
 
 # Install dependencies
 COPY requirements.txt ./
-RUN pip install --no-cache-dir -r requirements.txt
+RUN apk --no-cache add \
+    build-base \
+    libffi-dev \
+    && pip install --no-cache-dir -r requirements.txt \
+    && apk del build-base libffi-dev
 
 # Copy the application code into the container
 COPY . .
 
 # Clean up unnecessary files and reduce the image size
-RUN apk remove -y --purge build-essential && \
-    apk autoremove -y && \
-    apk clean && \
-    rm -rf /var/lib/apt/lists/* /root/.cache /tmp/*
+RUN apk del .build-deps && \
+    rm -rf /var/cache/apk/*
 
 # Specify the command to run on container start
 CMD ["python", "./src/main.py"]
