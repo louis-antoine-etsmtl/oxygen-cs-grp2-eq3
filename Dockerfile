@@ -2,19 +2,25 @@
 FROM python:3.8 as build
 
 WORKDIR /usr/src/app
+
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED 1
+
+RUN python -m venv /opt/venv
+ENV PATH="/opt/venv/bin:$PATH"
+
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
+
 
 # Stage 2: Runtime
 FROM python:3.8-slim as runtime
 
-WORKDIR /usr/src/app
-COPY --from=build /usr/src/app /usr/src/app
+COPY --from=build /opt/venv /opt/venv
 
-# Cleanup unnecessary files and reduce the image size
-RUN apt-get remove -y --purge build-essential && \
-    apt-get autoremove -y && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/* /root/.cache /tmp/*
+WORKDIR /usr/src/app
+
+ENV PATH="/opt/venv/bin:$PATH"
+
 
 CMD ["python", "./src/main.py"]
