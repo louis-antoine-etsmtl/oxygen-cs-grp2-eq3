@@ -135,6 +135,7 @@ class App:
                     print(f"HVAC event {event_type} saved to database: {timestamp}")
         except Exception as e:
             print(f"Error saving HVAC event {event_type} to database: {e}")
+            print("hello")
 
 
 if __name__ == "__main__":
