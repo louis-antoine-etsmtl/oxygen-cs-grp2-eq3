@@ -1,4 +1,3 @@
 python-dotenv
-pipenv
 signalrcore
 psycopg2
