@@ -1,6 +1,3 @@
-# Multistage build
-
-# Stage 1: Build
 FROM python:3.8 as build
 
 WORKDIR /usr/src/app
