@@ -16,4 +16,4 @@ WORKDIR /usr/src/app
 
 COPY --from=build /usr/src/app/src /usr/src/app/src
 
-CMD ["python", "./src/main.py"]
+CMD ["python", "./main.py"]
