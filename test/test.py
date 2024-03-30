@@ -13,9 +13,9 @@ class TestApp(unittest.TestCase):
     def setUpClass(cls):
         load_dotenv()
 
-        cls.TICKETS = int(os.getenv("TICKETS"))
-        cls.T_MAX = int(os.getenv("T_MAX"))
-        cls.T_MIN = int(os.getenv("T_MIN"))
+        cls.TICKETS = int(10)
+        cls.T_MAX = int(50)
+        cls.T_MIN = int(20)
 
     def setUp(self):
         self.app = App()
