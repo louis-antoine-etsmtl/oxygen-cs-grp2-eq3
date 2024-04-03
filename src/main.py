@@ -19,6 +19,10 @@ class App:
         self.T_MIN = int(os.getenv("T_MIN"))
         self.TICKETS = int(os.getenv("TICKETS"))
 
+        print("self.DATABASE ==> " + self.DATABASE)
+        print("self.HOST ==> " + self.HOST)
+        print("self.TOKEN ==> " + self.TOKEN)
+
         # Ensure all mandatory environment variables are set
         mandatory_vars = ["DATABASE", "HOST", "TOKEN", "T_MAX", "T_MIN", "TICKETS"]
         for var in mandatory_vars:
