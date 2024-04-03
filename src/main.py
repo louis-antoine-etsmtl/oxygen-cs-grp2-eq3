@@ -68,7 +68,7 @@ class App:
             .build()
         )
 
-        print("_hub_connection =====>" + self._hub_connection)
+        print("_hub_connection =====>" + str(self._hub_connection))
         self._hub_connection.on("ReceiveSensorData", self.on_sensor_data_received)
         self._hub_connection.on_open(lambda: print("||| Connection opened."))
         self._hub_connection.on_close(lambda: print("||| Connection closed."))
