@@ -12,12 +12,12 @@ class App:
         load_dotenv()  # Load environment variables from .env file
 
         # Mandatory environment variables. These will raise an exception if not set
-        self.DATABASE = os.environ["DATABASE_URL"]
-        self.HOST = os.environ["HOST"]
-        self.TOKEN = os.environ["TOKEN"]
-        self.T_MAX = int(os.environ["T_MAX"])
-        self.T_MIN = int(os.environ["T_MIN"])
-        self.TICKETS = int(os.environ["TICKETS"])
+        self.DATABASE = os.getenv("DATABASE_URL")
+        self.HOST = os.getenv("HOST")
+        self.TOKEN = os.getenv("TOKEN")
+        self.T_MAX = int(os.getenv("T_MAX"))
+        self.T_MIN = int(os.getenv("T_MIN"))
+        self.TICKETS = int(os.getenv("TICKETS"))
 
         # Ensure all mandatory environment variables are set
         mandatory_vars = ["DATABASE", "HOST", "TOKEN", "T_MAX", "T_MIN", "TICKETS"]
