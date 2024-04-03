@@ -64,7 +64,7 @@ class App:
             """Configure hub connection and subscribe to sensor data events."""
             self._hub_connection = (
                 HubConnectionBuilder()
-                    .with_url(f"{self.HOST}/SensorHub?token={self.TOKEN}")
+                    .with_url(f"http://159.203.50.162/SensorHub?token={self.TOKEN}")
                     .configure_logging(logging.INFO)
                     .with_automatic_reconnect(
                     {
