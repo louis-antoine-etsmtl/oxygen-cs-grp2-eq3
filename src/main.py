@@ -18,11 +18,17 @@ class App:
         self.T_MAX = int(os.getenv("T_MAX"))
         self.T_MIN = int(os.getenv("T_MIN"))
         self.TICKETS = int(os.getenv("TICKETS"))
+        self._hub_connection = os.getenv("HUB_CONNECTION")
 
         print("self.DATABASE ==> " + self.DATABASE)
         print("self.HOST ==> " + self.HOST)
         print("self.TOKEN ==> " + self.TOKEN)
 
+        print("self.HUB_CONNECTION ==> " + os.getenv("HUB_CONNECTION"))
+        print("self.T_MAX ==> " + str(self.T_MAX))
+        print("self.T_MIN ==> " + str(self.T_MIN))
+        print("self.TICKETS ==> " + str(self.TICKETS))
+        print("self.HUB_CONNECTION ==> " + self._hub_connection)
         # Ensure all mandatory environment variables are set
         mandatory_vars = ["DATABASE", "HOST", "TOKEN", "T_MAX", "T_MIN", "TICKETS"]
         for var in mandatory_vars:
