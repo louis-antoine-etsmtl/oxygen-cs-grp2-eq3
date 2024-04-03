@@ -52,29 +52,33 @@ class App:
             time.sleep(2)
 
     def setup_sensor_hub(self):
-        """Configure hub connection and subscribe to sensor data events."""
-        self._hub_connection = (
-            HubConnectionBuilder()
-            .with_url(f"{self.HOST}/SensorHub?token={self.TOKEN}")
-            .configure_logging(logging.INFO)
-            .with_automatic_reconnect(
-                {
-                    "type": "raw",
-                    "keep_alive_interval": 10,
-                    "reconnect_interval": 5,
-                    "max_attempts": 999,
-                }
+        try:
+            """Configure hub connection and subscribe to sensor data events."""
+            self._hub_connection = (
+                HubConnectionBuilder()
+                    .with_url(f"{self.HOST}/SensorHub?token={self.TOKEN}")
+                    .configure_logging(logging.INFO)
+                    .with_automatic_reconnect(
+                    {
+                        "type": "raw",
+                        "keep_alive_interval": 10,
+                        "reconnect_interval": 5,
+                        "max_attempts": 999,
+                    }
+                )
+                    .build()
             )
-            .build()
-        )
 
-        print("_hub_connection =====>" + str(self._hub_connection))
-        self._hub_connection.on("ReceiveSensorData", self.on_sensor_data_received)
-        self._hub_connection.on_open(lambda: print("||| Connection opened."))
-        self._hub_connection.on_close(lambda: print("||| Connection closed."))
-        self._hub_connection.on_error(
-            lambda data: print(f"||| An exception was thrown closed: {data.error}")
-        )
+            print("_hub_connection =====>" + str(self._hub_connection))
+            self._hub_connection.on("ReceiveSensorData", self.on_sensor_data_received)
+            self._hub_connection.on_open(lambda: print("||| Connection opened."))
+            self._hub_connection.on_close(lambda: print("||| Connection closed."))
+            self._hub_connection.on_error(
+                lambda data: print(f"||| An exception was thrown closed: {data.error}")
+            )
+        except Exception as e:
+            logger.error(f"Error establishing SignalR connection: {e}")
+            logger.error(traceback.format_exc())
 
     def on_sensor_data_received(self, data):
         """Callback method to handle sensor data on reception."""
