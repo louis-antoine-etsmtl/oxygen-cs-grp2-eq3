@@ -6,6 +6,8 @@ import psycopg2
 from dotenv import load_dotenv
 from signalrcore.hub_connection_builder import HubConnectionBuilder
 
+logger = logging.getLogger(__name__)
+
 
 class App:
     def __init__(self):
@@ -49,9 +51,9 @@ class App:
         try:
             self._hub_connection.start()
         except Exception as e:
-            logger.error(f"Error establishing SignalR connection: {e}")
+            logger.error(f"Error starting connection: {e}")
             logger.error(traceback.format_exc())
-            
+
         print("Press CTRL+C to exit.")
         while True:
             time.sleep(2)
