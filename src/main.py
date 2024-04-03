@@ -46,7 +46,12 @@ class App:
     def start(self):
         """Start Oxygen CS."""
         self.setup_sensor_hub()
-        self._hub_connection.start()
+        try:
+            self._hub_connection.start()
+        except Exception as e:
+            logger.error(f"Error establishing SignalR connection: {e}")
+            logger.error(traceback.format_exc())
+            
         print("Press CTRL+C to exit.")
         while True:
             time.sleep(2)
