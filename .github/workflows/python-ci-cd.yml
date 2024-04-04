@@ -81,9 +81,8 @@ jobs:
         uses: azure/k8s-set-context@v1
         with:
           kubeconfig: ${{ secrets.KUBECONFIG }}
-
       - name: Deploy to Kubernetes
-        run: kubectl apply -f hvac-deploy.yaml
+        run: kubectl apply -f hvac-deployment.yaml
 
 
 
