@@ -17,6 +17,7 @@ spec:
       containers:
       - name: oxygen
         image: thaais1/oxygen-cs-grp2-eq3:latest
+        imagePullPolicy: Always  # Ensure Kubernetes always checks for a new image
         env:
           # Define environment variables from ConfigMap
           - name: DATABASE_URL
