@@ -77,7 +77,4 @@ spec:
           name: lab03-env     
       - name: secrets
         secret:
-          secretName: env-secrets 
-      
-      
-      
+          secretName: env-secrets
