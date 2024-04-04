@@ -1,0 +1,82 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata: 
+  name: oxygen-deployment
+  labels:
+    app: oxygen
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: oxygen
+  template:
+    metadata:
+      labels:
+        app: oxygen
+    spec:
+      containers:
+      - name: oxygen
+        image: thaais1/oxygen-cs-grp2-eq3:latest
+        env:
+          # Define environment variables from ConfigMap
+          - name: DATABASE_URL
+            valueFrom:
+              configMapKeyRef:
+                name: env-config
+                key: hvac-database-url
+          - name: HOST
+            valueFrom:
+              configMapKeyRef:
+                name: env-config
+                key: hvac-host           
+          - name: TOKEN
+            valueFrom:
+              secretKeyRef:
+                name: env-secrets
+                key: hvac-token   
+          - name: HUB_CONNECTION
+            valueFrom:
+              configMapKeyRef:
+                name: env-config
+                key: hvac-hub-connection    
+          - name: TICKETS
+            valueFrom:
+              configMapKeyRef:
+                name: env-config
+                key: hvac-tickets      
+          - name: T_MAX
+            valueFrom:
+              configMapKeyRef:
+                name: env-config
+                key: hvac-t-max         
+          - name: T_MIN
+            valueFrom:
+              configMapKeyRef:
+                name: env-config
+                key: hvac-t-min                 
+        ports:
+        - containerPort: 83
+        resources:
+          requests:
+            cpu: "10m"  # Requesting 100 millicores (0.1 cores) of CPU
+            memory: "64Mi"  # Requesting 64 Mebibytes of memory
+          limits:
+            cpu: "20m"  # Limiting to 200 millicores (0.2 cores) of CPU
+            memory: "64Mi"  # Limiting to 128 Mebibytes of memory    
+
+        volumeMounts:
+        - name: lab03-env-file
+          mountPath: /app/.env
+          readOnly: true
+        - name: secrets
+          mountPath: /secrets
+      volumes:
+      - name: lab03-env-file
+        configMap:
+          name: lab03-env     
+      - name: secrets
+        secret:
+          secretName: env-secrets 
+      
+      
+      
