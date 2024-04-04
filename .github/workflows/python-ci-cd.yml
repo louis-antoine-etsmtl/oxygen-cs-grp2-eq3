@@ -27,7 +27,7 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
-          
+
 
   test:
     runs-on: ubuntu-latest
@@ -77,10 +77,13 @@ jobs:
           tags: thaais1/oxygen-cs-grp2-eq3:latest
 
       # Add Kubernetes deployment step
-      - name: Deploy to Kubernetes
-        uses: appleboy/kubectl-action@v0.1.5
+      - name: Configure kubectl
+        uses: azure/k8s-set-context@v1
         with:
-          args: apply -f hvac-deploy.yaml
+          kubeconfig: ${{ secrets.KUBECONFIG }}
+
+      - name: Deploy to Kubernetes
+        run: kubectl apply -f hvac-deploy.yaml
 
 
 
