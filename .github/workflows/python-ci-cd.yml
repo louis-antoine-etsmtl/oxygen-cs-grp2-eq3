@@ -81,6 +81,10 @@ jobs:
         uses: azure/k8s-set-context@v1
         with:
           kubeconfig: ${{ secrets.KUBECONFIG }}
+          
+      - name: Removing old Deploy
+        run: kubectl delete deployment metrics-deployment
+
       - name: Deploy to Kubernetes
         run: kubectl apply -f hvac-deployment.yaml
 
