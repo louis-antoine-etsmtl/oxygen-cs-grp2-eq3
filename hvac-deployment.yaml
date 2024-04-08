@@ -66,15 +66,18 @@ spec:
             memory: "64Mi"  # Limiting to 128 Mebibytes of memory    
 
         volumeMounts:
-        - name: lab03-env-file
+        - name: env-config-file
           mountPath: /app/.env
           readOnly: true
         - name: secrets
           mountPath: /secrets
       volumes:
-      - name: lab03-env-file
+      - name: env-config-file
         configMap:
-          name: lab03-env     
+          name: env-config     
       - name: secrets
         secret:
-          secretName: env-secrets
+          secretName: env-secrets 
+      
+      
+      

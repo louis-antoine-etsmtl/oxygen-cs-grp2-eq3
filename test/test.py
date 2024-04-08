@@ -32,7 +32,7 @@ class TestApp(unittest.TestCase):
         self.TICKETS = int(os.getenv("TICKETS"))
 
         self.assertEqual(self.TICKETS, 10)
-        self.assertEqual(self.T_MAX, 50)
+        self.assertEqual(self.T_MAX, 65)
         self.assertEqual(self.T_MIN, 20)
 
     @patch("requests.get")  # Simulez 'requests.get' pour la durée de ce test
