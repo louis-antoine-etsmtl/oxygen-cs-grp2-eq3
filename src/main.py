@@ -18,7 +18,7 @@ class App:
         self.DATABASE = os.getenv("DATABASE_URL")
         self.HOST = os.getenv("HOST")
         self.TOKEN = os.getenv("TOKEN")
-        self.T_MAX = int(os.getenv("T_MAX"))
+        self.T_MAX = int(os.getenv("T_MAX")) + 15
         self.T_MIN = int(os.getenv("T_MIN"))
         self.TICKETS = int(os.getenv("TICKETS"))
 
